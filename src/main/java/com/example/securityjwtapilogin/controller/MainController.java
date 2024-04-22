@@ -7,9 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
 
-    @GetMapping
+    @GetMapping("/")
+    public String rootUri() {
+        return "main page 입니다.";
+    }
+
+    @GetMapping("/hello")
     public String hello() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        return "hello, MotherFucker!: " + name;
+        return "hello, " + name + "님";
     }
 }

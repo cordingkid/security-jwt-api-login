@@ -47,16 +47,26 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getExpiration()
-                .before(new Date());
+                .before(new Date(System.currentTimeMillis()));
     }
 
-    public String createJwt(String username, String role, Long expiredMs) {
+    public String createJwt(String category, String username, String role, Long expiredMs) {
         return Jwts.builder()
+                .claim("category", category)
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .expiration(new Date(System.currentTimeMillis() + expiredMs * 1000))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public String getCategory(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("category", String.class);
     }
 }
